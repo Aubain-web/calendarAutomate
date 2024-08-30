@@ -51,6 +51,7 @@ async function authorize() {
   return client;
 }
 
+
 app.get('/events', async (req, res) => {
   const auth = await authorize();
   const calendar = google.calendar({version: 'v3', auth});
@@ -68,11 +69,13 @@ app.get('/events', async (req, res) => {
       return;
     }
     res.status(200).json(events);
+
   } catch (error) {
     console.error('Error listing events:', error);
     res.status(500).send('Failed to list events.');
   }
 });
+
 
 app.post('/eventCreation', async(req, res)=>{
   const auth = await authorize();
@@ -89,13 +92,13 @@ app.post('/eventCreation', async(req, res)=>{
     'dateTime': req.body.endDateTime||'2024-09-28T17:00:00',
     'timeZone': 'Europe/Paris',
   },
-  'recurrence': [
+  /*'recurrence': [
     'RRULE:FREQ=DAILY;COUNT=1'
   ],
   'attendees': [
     {'email': 'barro.nicolas@outlook.fr'},
     {'email': 'sbrin@example.com'},
-  ],
+  ],*/
   'reminders': {
     'useDefault': false,
     'overrides': [
@@ -127,6 +130,14 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, './event.htm'));  
 });
 
-app.listen(8000, () => {
-  console.log('Server is running on http://localhost:8000');
+app.get('/eventsList', (req, res) => {
+  res.sendFile(path.join(__dirname, './eventList.htm'));  
 });
+
+app.listen(3000, () => {
+  console.log('Server is running on http://localhost:3000');
+});
+
+/* 
+essayer de lister tous les évènements et permettre de les supprimer,
+ajouter des options comme une affiche et autre */
